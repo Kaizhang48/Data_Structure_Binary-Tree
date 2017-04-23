@@ -1,3 +1,7 @@
+/ compile with
+// c++ -o bt binary_tree.cpp -std=c++11
+// execute with
+// ./bt
 #include<iostream>
 #include<stdexcept>
 using namespace std;
@@ -18,8 +22,8 @@ public:
 	void setDen(const myint &);
 	myint operator<(const Frac &) const;
 	myint operator>(const Frac &) const;
-
 };
+
 Frac::Frac(const myint& _num, const myint &_den) {
 	num = _num;
 	den = _den;
@@ -54,7 +58,7 @@ myint Frac::operator>(const Frac &_cW) const {
 	}
 	return 0;
 }
-
+//==========THIS IS TREE======================================
 class TNode {
 	friend ostream& operator<<(ostream& , TNode* );
 public:
@@ -62,11 +66,23 @@ public:
 	TNode * lChild;
 	TNode * rChild;
 	TNode();
-
 };
+
 TNode::TNode() {
 	lChild = nullptr;
 	rChild = nullptr;
+}
+
+void deleteBST(TNode** root){
+	if((*root)==nullptr){
+		return;
+	}
+	deleteBST(&((*root)->lChild));
+	deleteBST(&((*root)->rChild));
+	if((*root)->lChild==nullptr&&(*root)->rChild==nullptr){
+		delete (*root);
+		*root=nullptr;
+	}
 }
 
 void insert(TNode*& root, const Frac& fr) {
@@ -86,7 +102,7 @@ void insert(TNode*& root, const int& b, const int&c = 1) {
 
 TNode*& findnode(TNode* &root, const Frac& a) {
 	if (root == nullptr) {
-		throw out_of_range("root can not be nullptr!");
+		return root;
 	}
 	if (a < root->value) {
 		findnode(root->lChild, a);
@@ -111,7 +127,7 @@ int pop_up(TNode* &root, const Frac& v) {
 				pop_up(root, temp);
 				target->value = temp;
 			}
-			else {//lChildÓÐ, rChildÃ»ÓÐ
+			else {//lChildÃ“Ã, rChildÃƒÂ»Ã“Ã
 				TNode* temp = target;
 				target = temp->lChild;
 				auto templ = temp->lChild;
@@ -140,8 +156,6 @@ int pop_up(TNode* &root, const Frac& v) {
 		return 0;
 	}
 }
-
-
 
 void printAll(TNode * root) {
 	if (root != nullptr) {
@@ -174,29 +188,29 @@ ostream& operator<<(ostream& os, TNode* root) {
 
 void check(TNode* t) {
 	if (t->lChild == nullptr) {
-		cout << "no left child" << endl;
+		cout << t->value<<" no left child" << ", ";
 	}
 	else {
-		cout << "have left child" << endl;
-		
+		cout <<t->value<< " have left child: ";
+
 		auto re = t->lChild;
 		TNode ree = *re;
 		Frac reee = ree.value;
 
-		cout << "left child is: " << reee << endl;
-		
+		cout << reee <<", ";
+
 	}
 	if (t->rChild == nullptr) {
-		cout << "no right child" << endl;
+		cout << " no right child" << endl;
 	}
 	else {
-		cout << "have right child" << endl;
-		
+		cout << " have right child: ";
+
 		auto re = t->rChild;
 		TNode ree = *re;
 		Frac reee = ree.value;
 
-		cout << "right child is: " << reee << endl;
+		cout << reee << endl;
 	}
 }
 
@@ -217,17 +231,22 @@ int main() {
 	insert(root,10);
 	insert(root,13);
 	insert(root,14);
+  	cout<<root<<endl;
 	pop_up(root, 5);
-	system("PAUSE");
+	cout<<"after pop up 5: "<<endl;
+	cout<<root<<endl;
+	//system("PAUSE");
 	check(findnode(root,7));
-	system("PAUSE");
-	cout << root << endl;
-	system("PAUSE");
+	//system("PAUSE");
 	pop_up(root, 7);
-	system("PAUSE");
+	cout<<"after pop up 7: "<<endl;
+	cout<<root<<endl;
+	//system("PAUSE");
 	check(findnode(root, 9));
-	system("PAUSE");
+	//system("PAUSE");
 	cout << root << endl;
-	system("PAUSE");
+	//system("PAUSE");
+	deleteBST(&root);
 	return 0;
 }
+
